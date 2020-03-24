@@ -3,27 +3,31 @@ import styled from "styled-components";
 import "./styles.css";
 
 export default function App() {
-  const [screen, setScreen] = React.useState("");
-  const [calculate, setCalculate] = React.useState(false);
+  const [screen, setScreen] = React.useState("0");
+
   const clickHandler = () => {
+    let defaultValue = screen;
     if (event.target.tagName === "DIV") {
       return;
     }
     let val = event.target.textContent;
     switch (val) {
       case "c":
-        setScreen("");
+        setScreen("0");
         break;
       case "=":
         try {
-          setScreen(eval(screen));
-          setCalculate(true);
+          setScreen(eval(defaultValue));
         } catch (ex) {
           setScreen("Error");
         }
         break;
       default:
-        setScreen(screen + "" + val);
+        if (defaultValue === "0") {
+          setScreen("" + val);
+        } else {
+          setScreen(screen + "" + val);
+        }
     }
   };
 
@@ -92,6 +96,11 @@ const StyledButton = styled.button`
   padding: 0.25em 1em;
   border: 2px solid palevioletred;
   border-radius: 3px;
+  cursor: pointer;
+  &:hover {
+    background-color: sandybrown;
+    color: #fff;
+  }
 `;
 
 const TextArea = styled.textarea`
