@@ -1,18 +1,26 @@
 import React from "react";
+import styled from "styled-components";
 import "./styles.css";
 
 export default function App() {
   const [screen, setScreen] = React.useState("");
-
+  const [calculate, setCalculate] = React.useState(false);
   const clickHandler = () => {
+    if (event.target.tagName === "DIV") {
+      return;
+    }
     let val = event.target.textContent;
-    console.log(event.target.type);
     switch (val) {
       case "c":
         setScreen("");
         break;
       case "=":
-        setScreen(eval(screen));
+        try {
+          setScreen(eval(screen));
+          setCalculate(true);
+        } catch (ex) {
+          setScreen("Error");
+        }
         break;
       default:
         setScreen(screen + "" + val);
@@ -23,54 +31,83 @@ export default function App() {
     <div className="App">
       <h1>Hello CodeSandbox</h1>
       <h2>Calculator</h2>
-      <div
-        style={{ width: "250px", height: "400px", border: "1px solid grey" }}
-      >
+      <Container>
         <DisplayScreen value={screen} />
         <div onClick={clickHandler}>
-          <Button label={"+"} type="calc" />
-          <Button label={"-"} type="calc" />
-          <Button label={"="} type="calc" />
+          <Button label={"c"} isPrimary={true} width="2x" />
+          <Button label={"%"} type="calc" />
+          <Button label={"/"} type="calc" />
           <br />
           <Button label={7} />
           <Button label={8} />
           <Button label={9} />
+          <Button label={"*"} type="calc" />
           <br />
           <Button label={4} />
           <Button label={5} />
           <Button label={6} />
+          <Button label={"-"} type="calc" />
           <br />
           <Button label={1} />
           <Button label={2} />
           <Button label={3} />
+          <Button label={"+"} type="calc" />
           <br />
-          <Button label={0} />
+          <Button label={0} width="2x" />
           <Button label={"."} />
-          <Button label={"c"} />
+          <Button label={"="} type="calc" />
         </div>
-      </div>
+      </Container>
     </div>
   );
 }
 
-const DisplayScreen = ({ value, refs }) => (
-  <textarea
-    style={{
-      width: "90%",
-      margin: "5px",
-      textAlign: "right",
-      padding: "5px",
-      border: "1px solid blue"
-    }}
-    readOnly
-    value={value}
-  />
-);
+const DisplayScreen = ({ value }) => <TextArea readOnly value={value} />;
 
-const Button = ({ buttonHandler, label, type = "number" }) => {
+const Button = ({
+  buttonHandler,
+  label,
+  isPrimary,
+  type = "number",
+  width = ""
+}) => {
   return (
-    <button type={type} className="Button" onClick={buttonHandler}>
+    <StyledButton
+      primary={isPrimary}
+      width={width}
+      type={type}
+      onClick={buttonHandler}
+    >
       {label}
-    </button>
+    </StyledButton>
   );
 };
+
+const StyledButton = styled.button`
+  background: ${props => (props.primary ? "palevioletred" : "white")};
+  color: ${props => (props.primary ? "white" : "palevioletred")};
+  width: ${props => (props.width === "2x" ? "109px" : "50px")};
+  font-size: 1em;
+  margin: 0.3em;
+  padding: 0.25em 1em;
+  border: 2px solid palevioletred;
+  border-radius: 3px;
+`;
+
+const TextArea = styled.textarea`
+  width: 227px;
+  height: 50px;
+  margin: 5px;
+  text-align: right;
+  padding: 5px;
+  border: 2px solid palevioletred;
+  font-size: 24px;
+  box-sizing: border-box;
+`;
+
+const Container = styled.div`
+  border: 1px solid darkgoldenrod;
+  margin: 0px auto;
+  width: 250px;
+  background: lightslategray;
+`;
