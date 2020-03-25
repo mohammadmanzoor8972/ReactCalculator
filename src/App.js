@@ -5,7 +5,7 @@ import "./styles.css";
 export default function App() {
   const [screen, setScreen] = React.useState("0");
 
-  const clickHandler = () => {
+  const clickHandler = event => {
     let defaultValue = screen;
     if (event.target.tagName === "DIV") {
       return;
